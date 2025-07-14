@@ -1,6 +1,36 @@
 #include<stdio.h>
+struct Event{
+    char title[100];
+    char description[200];
+    char date[20];
+    char time[10];
+    char venue[50];
+};
+struct Registration{
+    char eventTitle[100];
+    char participantName[50];
+    char id[20];
+    char email[20];
+};
+struct Feedback{
+    char eventTitle[100];
+    char participantName[50];
+    char feedback[300];
+};
 void createEvent(){
     printf("create event section\n");
+    struct Event e;
+    printf("Event title: ");
+    scanf("%s", &e.title);
+    printf("Description: ");
+    scanf("%s",&e.description);
+    printf("Date: ");
+    scanf("%s", &e.date);
+    printf("Time: ");
+    scanf("%s",&e.time);
+    printf("Venue: ");
+    scanf("%s",&e.venue);
+    printf("Event title: %s\nDescription: %s\nDate: %s\nTime: %s\nVenue: %s\n", e.title, e.description, e.date, e.time, e.venue);
 }
 void viewEvent(){
     printf("view event section\n");   
@@ -13,9 +43,28 @@ void deleteEvent(){
 }
 void registerParticipant(){  
     printf("resister event section\n");
+    struct Registration p;
+    printf("Event title: ");
+    scanf("%s", &p.eventTitle);
+    printf("Participant name: ");
+    scanf("%s", &p.participantName);
+    printf("Student ID: ");
+    scanf("%s", &p.id);
+    printf("Email: ");
+    scanf("%s", &p.email);
+    printf("\nCongragulations !! Registration Completed...\n");
+    printf("Event title: %s\nParticipant name: %s\nStudent ID: %s\nEmail: %s\n", p.eventTitle, p.participantName, p.id, p.email);
 }
 void submitFeedback(){
-    printf("submit feedback section\n");  
+    printf("submit feedback section\n"); 
+    struct Feedback f;
+    printf("Event title: ");
+    scanf("%s", &f.eventTitle);
+    printf("Your Name: ");
+    scanf("%s", &f.participantName);
+    printf("Your Feedback: ");
+    scanf("%s", &f.feedback);
+    printf("\nThanks for your feedback, %s .\nFeedback details:\nEvent title: %s\nFeedback Given: %s\n", f.participantName, f.eventTitle, f.feedback);
 }
 void viewAttendance(){
     printf("view attendance section\n"); 
@@ -74,16 +123,15 @@ int main(){
     printf("Login as:\n1. Organizer\n2. Participant\nChose role: ");
     int role;
     scanf("%d", &role);
-    switch (role)
-    {
-    case 1:
-        organizer();
-        break;
-    case 2:
-        participant();
-        break;    
-    default:
-        printf("Invalid option\n");
-        break;
+    switch (role){
+        case 1:
+            organizer();
+            break;
+        case 2:
+            participant();
+            break;    
+        default:
+            printf("Invalid option\n");
+            break;
     }
 }
