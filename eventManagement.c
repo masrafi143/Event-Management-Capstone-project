@@ -10,7 +10,7 @@ struct Registration{
     char eventTitle[100];
     char participantName[50];
     char id[20];
-    char email[20];
+    char email[40];
 };
 struct Feedback{
     char eventTitle[100];
@@ -44,7 +44,7 @@ void createEvent(){
         fprintf(eventPtr, "Date: %s", e.date);
         fprintf(eventPtr, "Time: %s", e.time);
         fprintf(eventPtr, "Venue: %s\n", e.venue);
-        fprintf(eventPtr, "-------------------------\n");
+        fprintf(eventPtr, "-------------------------\n\n");
         
         printf("--- Event %d saved successfully ---\n", i);
     }
@@ -61,18 +61,29 @@ void deleteEvent(){
     printf("delete event section\n");   
 }
 void registerParticipant(){  
-    printf("resister event section\n");
+    printf("\n---Register Particiant section.---\nEnter details for registration: \n");
     struct Registration p;
+    FILE *participantPtr;
+    participantPtr = fopen("participant.txt", "a");
+
+    getchar();
     printf("Event title: ");
-    scanf("%s", &p.eventTitle);
+    fgets(p.eventTitle, sizeof(p.eventTitle), stdin);
     printf("Participant name: ");
-    scanf("%s", &p.participantName);
+    fgets(p.participantName, sizeof(p.participantName), stdin);
     printf("Student ID: ");
-    scanf("%s", &p.id);
+    fgets(p.id, sizeof(p.id), stdin);
     printf("Email: ");
-    scanf("%s", &p.email);
-    printf("\nCongragulations !! Registration Completed...\n");
-    printf("Event title: %s\nParticipant name: %s\nStudent ID: %s\nEmail: %s\n", p.eventTitle, p.participantName, p.id, p.email);
+    fgets(p.email, sizeof(p.email), stdin);
+
+    fprintf(participantPtr, "Event Title: %s", p.eventTitle);
+    fprintf(participantPtr, "Participant Name: %s", p.participantName);
+    fprintf(participantPtr, "Student ID: %s", p.id);
+    fprintf(participantPtr, "Email: %s\n", p.email);
+    fprintf(participantPtr, "---------------------------\n\n");
+    
+    printf("\n---Congratulations !! Registration completed successfully---\n");
+    fclose(participantPtr);
 }
 void submitFeedback(){
     printf("submit feedback section\n"); 
@@ -106,7 +117,6 @@ void organizer(){
     printf("Choose an option: ");
     int option;
     scanf("%d", &option);
-    printf("You chose option: %d\n", option);
     switch(option){
         case 1: createEvent(); break;
         case 2: viewEvent(); break;
@@ -129,7 +139,6 @@ void participant(){
     printf("Choose an option: ");
     int option;
     scanf("%d", &option);
-    printf("You chose option: %d\n", option);
     switch(option){
         case 1: viewEvent(); break;
         case 2: registerParticipant(); break;
