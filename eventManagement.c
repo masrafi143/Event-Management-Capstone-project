@@ -15,7 +15,7 @@ struct Registration{
 struct Feedback{
     char eventTitle[100];
     char participantName[50];
-    char feedback[300];
+    char feedback[1000];
 };
 void createEvent(){
     struct Event e;
@@ -86,15 +86,25 @@ void registerParticipant(){
     fclose(participantPtr);
 }
 void submitFeedback(){
-    printf("submit feedback section\n"); 
+    printf("---Submit Your Feedback.---\n"); 
     struct Feedback f;
+    FILE *feedbackPtr;
+    feedbackPtr = fopen("feedback.txt", "a");
+    getchar();
     printf("Event title: ");
-    scanf("%s", &f.eventTitle);
+    fgets(f.eventTitle, sizeof(f.eventTitle), stdin);
     printf("Your Name: ");
-    scanf("%s", &f.participantName);
+    fgets(f.participantName, sizeof(f.participantName), stdin);
     printf("Your Feedback: ");
-    scanf("%s", &f.feedback);
-    printf("\nThanks for your feedback, %s .\nFeedback details:\nEvent title: %s\nFeedback Given: %s\n", f.participantName, f.eventTitle, f.feedback);
+    fgets(f.feedback, sizeof(f.feedback), stdin);
+
+    fprintf(feedbackPtr, "Event Title: %s", f.eventTitle);
+    fprintf(feedbackPtr, "Participant Name: %s", f.participantName);
+    fprintf(feedbackPtr, "Feedback: %s\n", f.feedback);
+    fprintf(feedbackPtr, "-----------------------------\n\n");
+
+    printf("\n---Thanks for your feedback.---\n");
+    fclose(feedbackPtr);
 }
 void viewAttendance(){
     printf("view attendance section\n"); 
