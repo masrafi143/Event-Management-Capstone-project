@@ -3,7 +3,7 @@ struct Event{
     char title[100];
     char description[200];
     char date[20];
-    char time[10];
+    char time[20];
     char venue[50];
 };
 struct Registration{
@@ -18,20 +18,39 @@ struct Feedback{
     char feedback[300];
 };
 void createEvent(){
-    printf("create event section\n");
     struct Event e;
-    printf("Event title: ");
-    scanf("%s", &e.title);
-    printf("Description: ");
-    scanf("%s",&e.description);
-    printf("Date: ");
-    scanf("%s", &e.date);
-    printf("Time: ");
-    scanf("%s",&e.time);
-    printf("Venue: ");
-    scanf("%s",&e.venue);
-    printf("Event title: %s\nDescription: %s\nDate: %s\nTime: %s\nVenue: %s\n", e.title, e.description, e.date, e.time, e.venue);
+    FILE *eventPtr;
+    eventPtr = fopen("events.txt", "a");
+    
+    printf("Enter how many events you want to create: ");
+    int n;
+    scanf("%d", &n);
+    getchar();
+    for(int i=1; i<=n; i++){
+        printf("\nCreating Event %d:\n", i);
+        printf("Event title: ");
+        fgets(e.title, sizeof(e.title), stdin);
+        printf("Description: ");
+        fgets(e.description, sizeof(e.description), stdin);
+        printf("Date: ");
+        fgets(e.date, sizeof(e.date), stdin);
+        printf("Time: ");
+        fgets(e.time, sizeof(e.time), stdin);
+        printf("Venue: ");
+        fgets(e.venue, sizeof(e.venue), stdin);
+    
+        fprintf(eventPtr, "Title: %s", e.title);
+        fprintf(eventPtr, "Description: %s", e.description);
+        fprintf(eventPtr, "Date: %s", e.date);
+        fprintf(eventPtr, "Time: %s", e.time);
+        fprintf(eventPtr, "Venue: %s\n", e.venue);
+        fprintf(eventPtr, "-------------------------\n");
+        
+        printf("--- Event %d saved successfully ---\n", i);
+    }
+    fclose(eventPtr);   
 }
+
 void viewEvent(){
     printf("view event section\n");   
 }
