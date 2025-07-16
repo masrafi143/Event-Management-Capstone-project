@@ -52,7 +52,19 @@ void createEvent(){
 }
 
 void viewEvent(){
-    printf("view event section\n");   
+    printf("Events section\n");
+    FILE *eventPtr;
+    eventPtr = fopen("events.txt", "r");
+    if(eventPtr == NULL){
+        printf("No events data found.\n");
+        return;
+    }
+    char line[200];
+    while(fgets(line, sizeof(line), eventPtr)){
+        printf("%s", line);
+    }
+
+    fclose(eventPtr);
 }
 void updateEvent(){   
     printf("update event section\n");
