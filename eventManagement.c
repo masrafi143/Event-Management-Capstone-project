@@ -107,7 +107,20 @@ void submitFeedback(){
     fclose(feedbackPtr);
 }
 void viewAttendance(){
-    printf("view attendance section\n"); 
+    printf("\n---Attendance Section ---\n");
+    FILE *participantPtr;
+    participantPtr = fopen("participant.txt", "r");
+    if(participantPtr == NULL){
+        printf("No attendance data found.\n");
+        return;
+    }
+    char line[200];
+    while(fgets(line, sizeof(line), participantPtr)){
+        printf("%s", line);
+    }
+
+    fclose(participantPtr);
+    printf("--- End of Attendance List ---\n"); 
 }
 void generateReport(){
     printf("generate report section\n");
