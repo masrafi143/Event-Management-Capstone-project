@@ -118,20 +118,60 @@ void submitFeedback(){
     printf("\n---Thanks for your feedback.---\n");
     fclose(feedbackPtr);
 }
+void markAttendance() {
+    struct Registration p;
+    FILE *participantPtr = fopen("participant.txt", "r");
+    FILE *attendancePtr = fopen("attendance.txt", "a");
+
+    if (participantPtr == NULL) {
+        printf("No participant found for attendance.\n");
+        return;
+    }
+    char line[200];
+    while (fgets(line, sizeof(line), participantPtr)) {
+        if (strncmp(line, "Event Title: ", 13) == 0) {
+            strcpy(p.eventTitle, line + 13);
+            p.eventTitle[strcspn(p.eventTitle, "\n")] = '\0';
+        }
+        else if (strncmp(line, "Participant Name: ", 18) == 0) {
+            strcpy(p.participantName, line + 18);
+            p.participantName[strcspn(p.participantName, "\n")] = '\0';
+        }
+        else if (strncmp(line, "Student ID: ", 12) == 0) {
+            strcpy(p.id, line + 12);
+            p.id[strcspn(p.id, "\n")] = '\0';
+            int status;
+            printf("\nMark attendance for:\n");
+            printf("Name: %s\nID: %s\nDid the participant attend? (1 for Yes, 0 for No): ", p.participantName, p.id);
+            scanf("%d", &status);
+
+            fprintf(attendancePtr, "Event Title: %s\n", p.eventTitle);
+            fprintf(attendancePtr, "Participant Name: %s\n", p.participantName);
+            fprintf(attendancePtr, "Student ID: %s\n", p.id);
+            fprintf(attendancePtr, "Attendance: %s\n", status == 1 ? "Present" : "Absent");
+            fprintf(attendancePtr, "-----------------------------\n\n");
+        }
+    }
+
+    fclose(participantPtr);
+    fclose(attendancePtr);
+    printf("\n---Attendance marking completed successfully---\n");
+}
+
 void viewAttendance(){
     printf("\n---Attendance Section ---\n");
-    FILE *participantPtr;
-    participantPtr = fopen("participant.txt", "r");
-    if(participantPtr == NULL){
+    FILE *attendancePtr;
+    attendancePtr = fopen("attendance.txt", "r");
+    if(attendancePtr == NULL){
         printf("No attendance data found.\n");
         return;
     }
     char line[200];
-    while(fgets(line, sizeof(line), participantPtr)){
+    while(fgets(line, sizeof(line), attendancePtr)){
         printf("%s", line);
     }
 
-    fclose(participantPtr);
+    fclose(attendancePtr);
     printf("--- End of Attendance List ---\n"); 
 }
 void generateReport(){
@@ -146,9 +186,10 @@ void organizer(){
     printf("3. Update Events\n");
     printf("4. Delete Events\n");
     printf("5. Register Participant\n");
-    printf("6. View Attendance\n");
-    printf("7. Generate Report\n");
-    printf("8. Exit\n");
+    printf("6. Mark Attendance\n");
+    printf("7. View Attendance\n");
+    printf("8. Generate Report\n");
+    printf("9. Exit\n");
     printf("Choose an option: ");
     int option;
     scanf("%d", &option);
@@ -158,9 +199,10 @@ void organizer(){
         case 3: updateEvent(); break;
         case 4: deleteEvent(); break;
         case 5: registerParticipant(); break;
-        case 6: viewAttendance(); break;
-        case 7: generateReport(); break;
-        case 8: exit(0); break;
+        case 6: markAttendance(); break;
+        case 7: viewAttendance(); break;
+        case 8: generateReport(); break;
+        case 9: exit(0); break;
         default: printf("Invalid Option\n");
     }
 }
