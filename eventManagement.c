@@ -70,7 +70,57 @@ void updateEvent(){
     printf("update event section\n");
 }
 void deleteEvent(){
-    printf("delete event section\n");   
+    printf("\n--- Delete Event Section ---\n");
+    FILE *eventPtr = fopen("events.txt", "r");
+    FILE *tempPtr = fopen("temp.txt", "w");
+    if(eventPtr == NULL){
+        printf("No events found.\n");
+        return;
+    }
+
+    char searchTitle[100], line[300];
+    int found = 0;
+    getchar();
+    printf("Enter event title to delete: ");
+    fgets(searchTitle, sizeof(searchTitle), stdin);
+
+    int len = strlen(searchTitle);
+    if(len > 0 && searchTitle[len-1] == '\n'){
+        searchTitle[len-1] = '\0';
+    }
+
+    while(fgets(line, sizeof(line), eventPtr)){
+        if(strncmp(line, "Title: ", 7) == 0){
+            char tempTitle[100];
+            strcpy(tempTitle, line + 7);
+            len = strlen(tempTitle);
+            if(len > 0 && tempTitle[len-1] == '\n'){
+                tempTitle[len-1] = '\0';
+            }
+
+            if(strcmp(tempTitle, searchTitle) == 0){
+                found = 1;
+                printf("\n--- Event \"%s\" deleted successfully ---\n", searchTitle);
+
+                for(int i=0; i<7; i++){
+                    fgets(line, sizeof(line), eventPtr);
+                }
+                continue;
+            }
+        }
+        fputs(line, tempPtr);
+    }
+    fclose(eventPtr);
+    fclose(tempPtr);
+    remove("events.txt");
+    rename("temp.txt", "events.txt");
+
+    if(found){
+        printf("--- Event '%s' deleted successfully ---\n", searchTitle);
+    } else{
+        printf("--- Event '%s' not found ---\n", searchTitle);
+        remove("temp.txt");
+    }
 }
 void registerParticipant(){  
     printf("\n---Register Particiant section.---\nEnter details for registration: \n");
