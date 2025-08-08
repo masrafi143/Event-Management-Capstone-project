@@ -1,4 +1,11 @@
 #include<stdio.h>
+struct User {
+    char name[50];
+    char email[50];
+    char password[30];
+    char phone[20];
+    int role;
+};
 struct Event{
     char title[100];
     char description[200];
@@ -17,6 +24,114 @@ struct Feedback{
     char participantName[50];
     char feedback[1000];
 };
+
+void registerUser(){
+    printf("--- User Registration---\n");
+    struct User u;
+    FILE *userFile = fopen("users.txt", "a");
+    if(userFile == NULL){
+        printf("Error opening file!\n");
+        return;
+    }
+
+    printf("Enter Name: ");
+    fgets(u.name, sizeof(u.name), stdin);
+    u.name[strcspn(u.name, "\n")] = '\0';
+
+    printf("Select Role:\n1. Organizer\n2. Participant\nEnter choice (1 or 2): ");
+    scanf("%d", &u.role);
+    getchar();
+
+    printf("Enter Email: ");
+    fgets(u.email, sizeof(u.email), stdin);
+    u.email[strcspn(u.email, "\n")] = '\0';
+
+    printf("Enter Password: ");
+    fgets(u.password, sizeof(u.password), stdin);
+    u.password[strcspn(u.password, "\n")] = '\0';
+
+    printf("Enter Phone: ");
+    fgets(u.phone, sizeof(u.phone), stdin);
+    u.phone[strcspn(u.phone, "\n")] = '\0';
+
+    char user[20];
+    if(u.role == 1){
+        strcpy(user, "Organizer");
+    } else if(u.role == 2){
+        strcpy(user, "Participant");
+    }
+
+    fprintf(userFile, "Name: %s\nRole: %s\nEmail: %s\nPassword: %s\nPhone: %s\n", u.name, user, u.email, u.password, u.phone);
+
+    fclose(userFile);
+
+    printf("Registration successful!\n");
+    loginUser();
+}
+
+int loginUser(){
+    printf("---Login---\n");
+    char email[50], password[30];
+
+    printf("Enter Email: ");
+    fgets(email, sizeof(email), stdin);
+    email[strcspn(email, "\n")] = '\0';
+
+    printf("Enter Password: ");
+    fgets(password, sizeof(password), stdin);
+    password[strcspn(password, "\n")] = '\0';
+
+    FILE *file = fopen("users.txt", "r");
+    if(file == NULL){
+        printf("No registered users found.\n");
+        registerUser();
+    }
+
+    char line[256];
+    char storedEmail[50] = "";
+    char storedPass[30] = "";
+    char storedRole[20] = "";
+    int found = 0;
+
+    while(fgets(line, sizeof(line), file)){
+        if(strncmp(line, "Email: ", 7) == 0){
+            strcpy(storedEmail, line + 7);
+            storedEmail[strcspn(storedEmail, "\n")] = '\0';
+        }
+        else if(strncmp(line, "Password: ", 10) == 0){
+            strcpy(storedPass, line + 10);
+            storedPass[strcspn(storedPass, "\n")] = '\0';
+        }
+        else if(strncmp(line, "Role: ", 6) == 0){
+            strcpy(storedRole, line + 6);
+            storedRole[strcspn(storedRole, "\n")] = '\0';
+        }
+
+        if(strcmp(email, storedEmail) == 0 && strcmp(password, storedPass) == 0){
+            found = 1;
+            break;
+        }
+    
+    }
+    storedEmail[0] = '\0';
+    storedPass[0] = '\0';
+
+    fclose(file);
+
+    if(found){
+        printf("Login successful!\n");
+        if(strcmp(storedRole, "Organizer") == 0){
+            organizer();
+        } else if(strcmp(storedRole, "Participant") == 0){
+            participant();
+        }
+        return 1;
+    } else {
+        printf("Invalid email or password. Login failed.\n");
+        return 0;
+    }
+}
+
 void createEvent(){
     struct Event e;
     FILE *eventPtr;
@@ -355,15 +470,16 @@ void participant(){
     }
 }
 int main(){
-    printf("Login as:\n1. Organizer\n2. Participant\nChose role: ");
-    int role;
-    scanf("%d", &role);
-    switch (role){
+    printf("Welcome to Event Management System (Ez_VENT)\n1. Registration\n2. Login\nEnter choice: ");
+    int choice;
+    scanf("%d", &choice);
+    getchar();
+    switch (choice){
         case 1:
-            organizer();
+            registerUser();
             break;
         case 2:
-            participant();
+            loginUser();
             break;    
         default:
             printf("Invalid option\n");
