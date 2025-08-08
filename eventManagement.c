@@ -136,13 +136,21 @@ void registerParticipant(){
     printf("Email: ");
     fgets(p.email, sizeof(p.email), stdin);
 
+    char cleanID[20];
+    strcpy(cleanID, p.id);
+    cleanID[strcspn(cleanID, "\n")] = '\0';
+
     fprintf(participantPtr, "Event Title: %s", p.eventTitle);
     fprintf(participantPtr, "Participant Name: %s", p.participantName);
     fprintf(participantPtr, "Student ID: %s", p.id);
-    fprintf(participantPtr, "Email: %s\n", p.email);
+    fprintf(participantPtr, "Email: %s", p.email);
+    fprintf(participantPtr, "Seat Token: S-%s\n", cleanID);
+    fprintf(participantPtr, "Food Token: F-%s\n", cleanID);
     fprintf(participantPtr, "---------------------------\n\n");
     
     printf("\n---Congratulations !! Registration completed successfully---\n");
+    printf("Your Seat Token: S-%s\n", cleanID);
+    printf("Your Food Token: F-%s\n", cleanID);
     fclose(participantPtr);
 }
 void submitFeedback(){
