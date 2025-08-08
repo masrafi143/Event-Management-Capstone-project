@@ -1,0 +1,9 @@
+Title: title
+Description: descrption
+Date: cd "c:\Users\user\DTime: ownloads\Event ManaVenue: gement Capstone project\" && gcc eventManagement.
+-------------------------
+
+Title: c -o eventManagement && "c:\Users\user\Downloads\Event Management Capstone project\"eventManagementDescription: 
+Date: cd "c:\Users\user\DTime: ownloads\Event ManaVenue: gement Capstone project\" && gcc eventManagement.
+-------------------------
+

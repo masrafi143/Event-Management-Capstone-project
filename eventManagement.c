@@ -100,8 +100,6 @@ void deleteEvent(){
 
             if(strcmp(tempTitle, searchTitle) == 0){
                 found = 1;
-                printf("\n--- Event \"%s\" deleted successfully ---\n", searchTitle);
-
                 for(int i=0; i<7; i++){
                     fgets(line, sizeof(line), eventPtr);
                 }
@@ -170,6 +168,7 @@ void submitFeedback(){
 }
 void markAttendance() {
     struct Registration p;
+    int totalParticipant=0;
     FILE *participantPtr = fopen("participant.txt", "r");
     FILE *attendancePtr = fopen("attendance.txt", "a");
 
@@ -198,14 +197,21 @@ void markAttendance() {
             fprintf(attendancePtr, "Event Title: %s\n", p.eventTitle);
             fprintf(attendancePtr, "Participant Name: %s\n", p.participantName);
             fprintf(attendancePtr, "Student ID: %s\n", p.id);
-            fprintf(attendancePtr, "Attendance: %s\n", status == 1 ? "Present" : "Absent");
+            // fprintf(attendancePtr, "Attendance: %s\n", status == 1 ? "Present" : "Absent");
+            if(status==1){
+                totalParticipant++;
+                fprintf(attendancePtr, "Attendance: Present\n");
+            } else{
+                fprintf(attendancePtr, "Attendance: Absent\n");
+            }
             fprintf(attendancePtr, "-----------------------------\n\n");
         }
     }
-
+    
     fclose(participantPtr);
     fclose(attendancePtr);
     printf("\n---Attendance marking completed successfully---\n");
+    printf("total: %d", totalParticipant);
 }
 
 void viewAttendance(){
@@ -225,7 +231,73 @@ void viewAttendance(){
     printf("--- End of Attendance List ---\n"); 
 }
 void generateReport(){
-    printf("generate report section\n");
+    char eventTitle[100];
+    getchar();
+    printf("\n--- Generate Report for Specific Event ---\n");
+    printf("Enter Event Title: ");
+    fgets(eventTitle, sizeof(eventTitle), stdin);
+    eventTitle[strcspn(eventTitle, "\n")] = '\0';
+
+    int totalRegistered = 0, totalAttended = 0;
+    int eventFound = 0;
+
+    FILE *participantPtr = fopen("participant.txt", "r");
+    if(participantPtr == NULL){
+        printf("No participant data found for report generation.\n");
+        return;
+    }
+
+    char line[200];
+    while(fgets(line, sizeof(line), participantPtr)){
+        if(strncmp(line, "Event Title: ", 13) == 0){
+            char title[100];
+            strcpy(title, line + 13);
+            title[strcspn(title, "\n")] = '\0';
+            if(strcmp(title, eventTitle) == 0){
+                totalRegistered++;
+                eventFound = 1;
+            }
+        }
+    }
+    fclose(participantPtr);
+
+    if(eventFound==0){
+        printf("\n--- '%s' Event not found ---\n", eventTitle);
+        return;
+    }
+
+    FILE *attendancePtr = fopen("attendance.txt", "r");
+    if(attendancePtr == NULL){
+        printf("No attendance data found for report generation.\n");
+        return;
+    }
+
+    int isMatch = 0;
+    while(fgets(line, sizeof(line), attendancePtr)){
+        if(strncmp(line, "Event Title: ", 13) == 0){
+            char title[100];
+            strcpy(title, line + 13);
+            title[strcspn(title, "\n")] = '\0';
+            isMatch = (strcmp(title, eventTitle) == 0);
+        }
+        if(isMatch && strncmp(line, "Attendance: Present", 19) == 0){
+            totalAttended++;
+        }
+    }
+    fclose(attendancePtr);
+
+    FILE *reportPtr = fopen("events_Report.txt", "a");
+    if(reportPtr == NULL){
+        printf("Error: Could not open eventReport.txt for writing.\n");
+        return;
+    }
+    fprintf(reportPtr, "\n--- Report for Event: %s ---\n", eventTitle);
+    fprintf(reportPtr, "Total Registered Participants: %d\n", totalRegistered);
+    fprintf(reportPtr, "Total Attended Participants : %d\n", totalAttended);
+    fprintf(reportPtr, "----------------------------------------\n");
+    fclose(reportPtr);
+
+    printf("\nReport generated successfully.\n");
 }
 
 void organizer(){
