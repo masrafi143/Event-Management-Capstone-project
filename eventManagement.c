@@ -68,7 +68,7 @@ void registerUser(){
     printf("Registration successful!\n");
     loginUser();
 }
-
+char loggedInEmail[50] = "";
 int loginUser(){
     printf("---Login---\n");
     char email[50], password[30];
@@ -120,6 +120,7 @@ int loginUser(){
 
     if(found){
         printf("Login successful!\n");
+        strcpy(loggedInEmail, email);
         if(strcmp(storedRole, "Organizer") == 0){
             organizer();
         } else if(strcmp(storedRole, "Participant") == 0){
@@ -129,6 +130,126 @@ int loginUser(){
     } else {
         printf("Invalid email or password. Login failed.\n");
         return 0;
+    }
+}
+
+void dashboard(){
+    char line[256];
+    char storedName[50] = "";
+    char storedRole[20] = "";
+    char storedEmail[50] = "";
+    char storedPhone[20] = "";
+
+    FILE *userFile = fopen("users.txt", "r");
+    if(userFile == NULL){
+        printf("User data file not found.\n");
+        return;
+    }
+
+    char tempName[50], tempRole[20], tempEmail[50], tempPhone[20];
+    while(fgets(line, sizeof(line), userFile)){
+        if(strncmp(line, "Name: ", 6) == 0) {
+            strcpy(tempName, line + 6);
+            tempName[strcspn(tempName, "\n")] = '\0';
+        } else if(strncmp(line, "Role: ", 6) == 0){
+            strcpy(tempRole, line + 6);
+            tempRole[strcspn(tempRole, "\n")] = '\0';
+        } else if(strncmp(line, "Email: ", 7) == 0){
+            strcpy(tempEmail, line + 7);
+            tempEmail[strcspn(tempEmail, "\n")] = '\0';
+        } else if(strncmp(line, "Phone: ", 7) == 0){
+            strcpy(tempPhone, line + 7);
+            tempPhone[strcspn(tempPhone, "\n")] = '\0';
+
+            if(strcmp(tempEmail, loggedInEmail) == 0){
+                strcpy(storedName, tempName);
+                strcpy(storedRole, tempRole);
+                strcpy(storedEmail, tempEmail);
+                strcpy(storedPhone, tempPhone);
+                break;
+            }
+        }
+    }
+    fclose(userFile);
+
+    printf("\n--- User Dashboard ---\n");
+    printf("Name : %s\n", storedName);
+    printf("Role : %s\n", storedRole);
+    printf("Email: %s\n", storedEmail);
+    printf("Phone: %s\n", storedPhone);
+
+    FILE *participantFile = fopen("participant.txt", "r");
+    if(participantFile == NULL){
+        printf("No participant data found.\n");
+        return;
+    }
+
+    printf("\n--- Registered Events ---\n");
+    int registeredCount = 0;
+    char eventTitle[100] = "";
+    char email[50] = "";
+
+    while(fgets(line, sizeof(line), participantFile)){
+        if(strncmp(line, "Event Title: ", 13) == 0){
+            strcpy(eventTitle, line + 13);
+            eventTitle[strcspn(eventTitle, "\n")] = '\0';
+        }
+        else if(strncmp(line, "Email: ", 7) == 0){
+            strcpy(email, line + 7);
+            email[strcspn(email, "\n")] = '\0';
+
+            if(strcmp(email, loggedInEmail) == 0){
+                printf("Event: %s\n", eventTitle);
+                registeredCount++;
+            }
+        }
+    }
+    fclose(participantFile);
+
+    if(registeredCount == 0){
+        printf("No registered events found.\n");
+    } else{
+        printf("Total registered events: %d\n", registeredCount);
+    }
+    
+    FILE *attendanceFile = fopen("attendance.txt", "r");
+    if(attendanceFile == NULL){
+        printf("\nNo attendance data found.\n");
+        return;
+    }
+    
+    printf("\n--- Attended Events ---\n");
+    int attendedCount = 0;
+    char attEventTitle[100] = "";
+    char attParticipantName[50] = "";
+    char attParticipantEmail[50] = "";
+    char attendanceStatus[20] = "";
+    
+while(fgets(line, sizeof(line), attendanceFile)){
+    if(strncmp(line, "Event Title: ", 13) == 0){
+        strcpy(attEventTitle, line + 13);
+        attEventTitle[strcspn(attEventTitle, "\n")] = '\0';
+    }
+    else if(strncmp(line, "Email: ", 7) == 0){
+        strcpy(attParticipantEmail, line + 7);
+        attParticipantEmail[strcspn(attParticipantEmail, "\n")] = '\0';
+    }
+    else if(strncmp(line, "Attendance: ", 12) == 0){
+        strcpy(attendanceStatus, line + 12);
+        attendanceStatus[strcspn(attendanceStatus, "\n")] = '\0';
+
+        if(strcmp(attParticipantEmail, loggedInEmail) == 0 && strcmp(attendanceStatus, "Present") == 0){
+            printf("Event: %s\n", attEventTitle);
+            attendedCount++;
+        }
+    }
+}
+    fclose(attendanceFile);
+    
+    if(attendedCount == 0){
+        printf("No attended events found.\n");
+    } else{
+        printf("Total attended events: %d\n", attendedCount);
     }
 }
 
@@ -320,7 +441,6 @@ void markAttendance() {
             fprintf(attendancePtr, "Event Title: %s\n", p.eventTitle);
             fprintf(attendancePtr, "Participant Name: %s\n", p.participantName);
             fprintf(attendancePtr, "Student ID: %s\n", p.id);
-            // fprintf(attendancePtr, "Attendance: %s\n", status == 1 ? "Present" : "Absent");
             if(status==1){
                 totalParticipant++;
                 fprintf(attendancePtr, "Attendance: Present\n");
@@ -457,7 +577,9 @@ void participant(){
     printf("1. View Events\n");
     printf("2. Register for Event\n");
     printf("3. Submit Feedback\n");
-    printf("4. Exit\n");
+    printf("4. Dashboard\n");
+    printf("5. Help & FAQ\n");
+    printf("6. Exit\n");
     printf("Choose an option: ");
     int option;
     scanf("%d", &option);
@@ -465,7 +587,9 @@ void participant(){
         case 1: viewEvent(); break;
         case 2: registerParticipant(); break;
         case 3: submitFeedback(); break;
-        case 4: exit(0); break;
+        case 4: dashboard(); break;
+        case 5: faq(); break;
+        case 6: exit(0); break;
         default: printf("Invalid Option\n");
     }
 }

@@ -1,0 +1,15 @@
+Name: masrafi
+Role: Participant
+Email: email
+Password: pass
+Phone: 012345678
+Name: organizer
+Role: Organizer
+Email: organizer
+Password: pass
+Phone: p
+Name: masrafi2
+Role: Participant
+Email: email2
+Password: password
+Phone: 01234567899
