@@ -1,0 +1,48 @@
+========== Help & FAQ ==========
+
+1. How do I register for an event?
+   -> Go to the 'Events' menu and choose 'Register for Event'. Fill in your details and confirm.
+
+2. How do I check my registered events?
+   -> From the main menu, select 'Dashboard'. It will show all your registered events.
+
+3. How do I mark attendance?
+   -> Attendance will be marked by the event organizer on the day of the event.
+
+4. Can I cancel my event registration?
+   -> Currently, cancellation is not supported. Please contact the admin for assistance.
+
+5. What if I forget my login password?
+   -> Contact the system administrator to reset your password.
+
+6. How do I update my profile info?
+   -> Profile update feature will be available in the next update.
+
+7. Can I register for multiple events at the same time?
+   -> Yes, you can register for multiple events as long as they do not overlap in schedule.
+
+8. Is there a deadline for event registration?
+   -> Yes, each event has its own deadline. Check event details before registering.
+
+9. How do I know if my registration was successful?
+   -> You will see a confirmation message after registration and it will appear in your dashboard.
+
+10. Is there any registration fee for events?
+    -> Most events are free, but some may have a registration fee. Check the event description.
+
+11. How do I search for upcoming events?
+    -> Go to the 'Events' section and select 'View Upcoming Events'.
+
+12. Can I see the history of events I attended?
+    -> Yes, your attendance history is available in the 'Dashboard'.
+
+13. What if the event is postponed or canceled?
+    -> You will be notified via email or in the event details page.
+
+14. Is my personal information secure?
+    -> Yes, your data is stored securely and is only used for event management purposes.
+
+15. Can I share an event with others?
+    -> Yes, you can share event details using the 'Share Event' option in the event page.
+
+================================================

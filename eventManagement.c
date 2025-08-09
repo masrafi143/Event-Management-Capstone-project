@@ -542,7 +542,19 @@ void generateReport(){
 
     printf("\nReport generated successfully.\n");
 }
-
+void faq(){
+    FILE *faqFile = fopen("faq.txt", "r");
+    char line[256];
+    if(faqFile == NULL){
+        printf("FAQ file not found.\n");
+        return;
+    }
+    printf("\n");
+    while(fgets(line, sizeof(line), faqFile)){
+        printf("%s", line);
+    }
+    fclose(faqFile);
+}
 void organizer(){
     printf("welcome as organizer\n");
     printf("Event Management System -(Organizer menu)\n");
