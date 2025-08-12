@@ -23,3 +23,70 @@ Venue: daffodil
 
 -------------------------
 
+Category: Cultural & Music
+Title: demo title 2
+Description: demo title 2
+Date: 6 aug
+Time: 8 pm
+Venue: daff
+
+Ticket System: Yes
+Ticket Price: 500.00
+Promo Code: early50
+-------------------------
+
+Category: Workshop & Training
+Title: demo 3
+Description: demo 3
+Date: date 3
+Time: time 3
+Venue: venue 3
+
+Ticket Price: 1000.00
+Promo Code: 
+-------------------------
+
+Category: Others
+Title: demo 4
+Description: demo 4
+Date: demo4
+Time: demo 4
+Venue: demo 4
+
+Ticket Price: 0.00
+Promo Code: N/A
+-------------------------
+
+Category: Others
+Title: demo 5
+Description: demo 5
+Date: demo 5
+Time: demo 5
+Venue: demo 5
+
+Ticket Price: 111.00
+Promo Code: 
+-------------------------
+
+Category: Others
+Title: demo 6
+Description: demo 6
+Date: demo 6
+Time: dem o6
+Venue: demo 6
+
+Ticket Price: 0.00
+Promo Code: N/A
+-------------------------
+
+Category: Tech & Innovation
+Title: demo 7
+Description: demo 7
+Date: demo 7
+Time: demo 7
+Venue: demo 7
+
+Ticket Price: 0.00
+Promo Code: N/A
+-------------------------
+

@@ -1,7 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-struct User {
+struct User{
     char name[50];
     char email[50];
     char password[30];
@@ -15,6 +15,9 @@ struct Event{
     char date[20];
     char time[20];
     char venue[50];
+    float ticketPrice;
+    char promoCode[50];
+
 };
 struct Registration{
     char eventTitle[100];
@@ -335,11 +338,10 @@ void createEvent(){
     int n;
     scanf("%d", &n);
     getchar();
-    
-    for (int i = 1; i <= n; i++) {
+
+    for (int i = 1; i <= n; i++){
         printf("\nCreating Event %d:\n", i);
 
-        // Category selection
         int choice;
         printf("Select Event Category:\n");
         printf("1. Tech & Innovation\n");
@@ -350,9 +352,9 @@ void createEvent(){
         printf("6. Others\n");
         printf("Enter choice (1-6): ");
         scanf("%d", &choice);
-        getchar(); // clear newline
+        getchar();
 
-        switch (choice) {
+        switch (choice){
             case 1: strcpy(e.category, "Tech & Innovation"); break;
             case 2: strcpy(e.category, "Cultural & Music"); break;
             case 3: strcpy(e.category, "Sports & Games"); break;
@@ -373,16 +375,38 @@ void createEvent(){
         printf("Venue: ");
         fgets(e.venue, sizeof(e.venue), stdin);
 
+        int hasTicket;
+        printf("Do you want tickets for this event? (1 = Yes, 0 = No): ");
+        scanf("%d", &hasTicket);
+        getchar();
+
+        if (hasTicket == 1){
+            printf("Enter ticket price: ");
+            scanf("%f", &e.ticketPrice);
+            getchar();
+            printf("Enter promo code (or leave blank and press Enter): ");
+            fgets(e.promoCode, sizeof(e.promoCode), stdin);
+            e.promoCode[strcspn(e.promoCode, "\n")] = '\0';
+        } else {
+            e.ticketPrice = 0.0;
+            strcpy(e.promoCode, "N/A");
+        }
+
         fprintf(eventPtr, "Category: %s\n", e.category);
         fprintf(eventPtr, "Title: %s", e.title);
         fprintf(eventPtr, "Description: %s", e.description);
         fprintf(eventPtr, "Date: %s", e.date);
         fprintf(eventPtr, "Time: %s", e.time);
         fprintf(eventPtr, "Venue: %s\n", e.venue);
+        if (hasTicket) {
+            fprintf(eventPtr, "Ticket Price: %.2f\n", e.ticketPrice);
+            fprintf(eventPtr, "Promo Code: %s\n", e.promoCode);
+        }
         fprintf(eventPtr, "-------------------------\n\n");
 
         printf("--- Event %d saved successfully ---\n", i);
     }
+
     fclose(eventPtr);
 }
 
