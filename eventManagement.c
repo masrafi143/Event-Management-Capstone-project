@@ -9,6 +9,7 @@ struct User {
     int role;
 };
 struct Event{
+    char category[50];
     char title[100];
     char description[200];
     char date[20];
@@ -329,13 +330,38 @@ void createEvent(){
     struct Event e;
     FILE *eventPtr;
     eventPtr = fopen("events.txt", "a");
-    
+
     printf("Enter how many events you want to create: ");
     int n;
     scanf("%d", &n);
     getchar();
-    for(int i=1; i<=n; i++){
+    
+    for (int i = 1; i <= n; i++) {
         printf("\nCreating Event %d:\n", i);
+
+        // Category selection
+        int choice;
+        printf("Select Event Category:\n");
+        printf("1. Tech & Innovation\n");
+        printf("2. Cultural & Music\n");
+        printf("3. Sports & Games\n");
+        printf("4. Workshop & Training\n");
+        printf("5. Food & Lifestyle\n");
+        printf("6. Others\n");
+        printf("Enter choice (1-6): ");
+        scanf("%d", &choice);
+        getchar(); // clear newline
+
+        switch (choice) {
+            case 1: strcpy(e.category, "Tech & Innovation"); break;
+            case 2: strcpy(e.category, "Cultural & Music"); break;
+            case 3: strcpy(e.category, "Sports & Games"); break;
+            case 4: strcpy(e.category, "Workshop & Training"); break;
+            case 5: strcpy(e.category, "Food & Lifestyle"); break;
+            case 6: strcpy(e.category, "Others"); break;
+            default: strcpy(e.category, "Others"); break;
+        }
+
         printf("Event title: ");
         fgets(e.title, sizeof(e.title), stdin);
         printf("Description: ");
@@ -346,17 +372,18 @@ void createEvent(){
         fgets(e.time, sizeof(e.time), stdin);
         printf("Venue: ");
         fgets(e.venue, sizeof(e.venue), stdin);
-    
+
+        fprintf(eventPtr, "Category: %s\n", e.category);
         fprintf(eventPtr, "Title: %s", e.title);
         fprintf(eventPtr, "Description: %s", e.description);
         fprintf(eventPtr, "Date: %s", e.date);
         fprintf(eventPtr, "Time: %s", e.time);
         fprintf(eventPtr, "Venue: %s\n", e.venue);
         fprintf(eventPtr, "-------------------------\n\n");
-        
+
         printf("--- Event %d saved successfully ---\n", i);
     }
-    fclose(eventPtr);   
+    fclose(eventPtr);
 }
 
 void viewEvent(){

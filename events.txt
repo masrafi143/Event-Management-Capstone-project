@@ -14,3 +14,12 @@ Venue: denue 1
 
 -------------------------
 
+Category: Tech & Innovation
+Title: workshop
+Description: ai sminer
+Date: 20
+Time: 2pm
+Venue: daffodil
+
+-------------------------
+
