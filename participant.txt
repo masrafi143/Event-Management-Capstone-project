@@ -1,0 +1,8 @@
+Event Title: Data science seminer
+Participant Name: Mohammad Masrafi
+Student ID: 369
+Email: masrafi123@gmail.com
+Seat Token: S-369
+Food Token: F-369
+---------------------------
+

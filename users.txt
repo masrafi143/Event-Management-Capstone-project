@@ -1,10 +1,20 @@
 Name: masrafi
 Role: Participant
-Email: participant
-Password: participant
+Email: p
+Password: p
 Phone: 012345678
 Name: organizer
 Role: Organizer
-Email: organizer
-Password: organizer
+Email: o
+Password: o
 Phone: 012345
+Name: Mohammad Masrafi
+Role: Organizer
+Email: masrafi@gmail.com
+Password: masrafi123
+Phone: 01234567890
+Name: Mohammad Masrafi
+Role: Participant
+Email: masrafi123@gmail.com
+Password: masrafi123
+Phone: 0112233445566

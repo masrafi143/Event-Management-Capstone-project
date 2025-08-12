@@ -1,4 +1,6 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 struct User {
     char name[50];
     char email[50];
@@ -68,6 +70,76 @@ void registerUser(){
     printf("Registration successful!\n");
     loginUser();
 }
+void registerVolunteer(){
+    printf("\n--- Register Volunteer Section ---\n");
+    FILE *eventPtr = fopen("events.txt", "r");
+    if(eventPtr == NULL){
+        printf("No events found. Please create an event first.\n");
+        return;
+    }
+    char line[300], eventList[100][100];
+    int eventCount = 0;
+
+    while(fgets(line, sizeof(line), eventPtr)){
+        if(strncmp(line, "Title: ", 7) == 0){
+            strcpy(eventList[eventCount], line + 7);
+            eventList[eventCount][strcspn(eventList[eventCount], "\n")] = '\0';
+            eventCount++;
+        }
+    }
+    fclose(eventPtr);
+
+    if(eventCount == 0){
+        printf("No events available for volunteers.\n");
+        return;
+    }
+
+    printf("\nAvailable Events:\n");
+    for(int i = 0; i < eventCount; i++){
+        printf("%d. %s\n", i + 1, eventList[i]);
+    }
+
+    int choice;
+    printf("Select event number to assign volunteer: ");
+    scanf("%d", &choice);
+    getchar();
+
+    if(choice < 1 || choice > eventCount){
+        printf("Invalid event selection.\n");
+        return;
+    }
+
+    char selectedEvent[100];
+    strcpy(selectedEvent, eventList[choice - 1]);
+
+    char volunteerName[50], phone[20], task[200];
+    printf("Enter Volunteer Name: ");
+    fgets(volunteerName, sizeof(volunteerName), stdin);
+    volunteerName[strcspn(volunteerName, "\n")] = '\0';
+
+    printf("Enter Phone Number: ");
+    fgets(phone, sizeof(phone), stdin);
+    phone[strcspn(phone, "\n")] = '\0';
+
+    printf("Enter Volunteer Task: ");
+    fgets(task, sizeof(task), stdin);
+    task[strcspn(task, "\n")] = '\0';
+
+    FILE *volunteerPtr = fopen("volunteer.txt", "a");
+    if(volunteerPtr == NULL){
+        printf("Error opening volunteer file!\n");
+        return;
+    }
+    fprintf(volunteerPtr, "Event Title: %s\n", selectedEvent);
+    fprintf(volunteerPtr, "Volunteer Name: %s\n", volunteerName);
+    fprintf(volunteerPtr, "Phone: %s\n", phone);
+    fprintf(volunteerPtr, "Task: %s\n", task);
+    fprintf(volunteerPtr, "-----------------------------\n\n");
+    fclose(volunteerPtr);
+
+    printf("\n--- Volunteer Registered Successfully for '%s' ---\n", selectedEvent);
+}
+
 char loggedInEmail[50] = "";
 int loginUser(){
     printf("---Login---\n");
@@ -562,7 +634,7 @@ void organizer(){
     printf("2. View Events\n");
     printf("3. Update Events\n");
     printf("4. Delete Events\n");
-    printf("5. Register Participant\n");
+    printf("5. Register Volunteer\n");
     printf("6. Mark Attendance\n");
     printf("7. View Attendance\n");
     printf("8. Generate Report\n");
@@ -575,7 +647,7 @@ void organizer(){
         case 2: viewEvent(); break;
         case 3: updateEvent(); break;
         case 4: deleteEvent(); break;
-        case 5: registerParticipant(); break;
+        case 5: registerVolunteer(); break;
         case 6: markAttendance(); break;
         case 7: viewAttendance(); break;
         case 8: generateReport(); break;

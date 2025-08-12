@@ -1,0 +1,16 @@
+Title: Programming contest
+Description: A university-level competition to solve challenging programming problems, test coding skills, and foster teamwork.
+Date: 11/09/2025
+Time: 9:00 am
+Venue: Daffodil International University
+
+-------------------------
+
+Title: demo event 1
+Description: demo desc 1
+Date: date 1
+Time: time 1
+Venue: denue 1
+
+-------------------------
+
