@@ -88,5 +88,4 @@ Venue: demo 7
 
 Ticket Price: 0.00
 Promo Code: N/A
--------------------------
 

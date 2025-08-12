@@ -15,9 +15,9 @@ struct Event{
     char date[20];
     char time[20];
     char venue[50];
+    int ticket;
     float ticketPrice;
     char promoCode[50];
-
 };
 struct Registration{
     char eventTitle[100];
@@ -333,7 +333,6 @@ void createEvent(){
     struct Event e;
     FILE *eventPtr;
     eventPtr = fopen("events.txt", "a");
-
     printf("Enter how many events you want to create: ");
     int n;
     scanf("%d", &n);
@@ -345,9 +344,9 @@ void createEvent(){
         int choice;
         printf("Select Event Category:\n");
         printf("1. Tech & Innovation\n");
-        printf("2. Cultural & Music\n");
+        printf("2. Workshop & Training\n");
         printf("3. Sports & Games\n");
-        printf("4. Workshop & Training\n");
+        printf("4. Cultural & Music\n");
         printf("5. Food & Lifestyle\n");
         printf("6. Others\n");
         printf("Enter choice (1-6): ");
@@ -356,9 +355,9 @@ void createEvent(){
 
         switch (choice){
             case 1: strcpy(e.category, "Tech & Innovation"); break;
-            case 2: strcpy(e.category, "Cultural & Music"); break;
+            case 2: strcpy(e.category, "Workshop & Training"); break;
             case 3: strcpy(e.category, "Sports & Games"); break;
-            case 4: strcpy(e.category, "Workshop & Training"); break;
+            case 4: strcpy(e.category, "Cultural & Music"); break;
             case 5: strcpy(e.category, "Food & Lifestyle"); break;
             case 6: strcpy(e.category, "Others"); break;
             default: strcpy(e.category, "Others"); break;
@@ -480,38 +479,148 @@ void deleteEvent(){
     }
 }
 void registerParticipant(){  
-    printf("\n---Register Particiant section.---\nEnter details for registration: \n");
-    struct Registration p;
-    FILE *participantPtr;
-    participantPtr = fopen("participant.txt", "a");
+    printf("\n---Register Participant section.---\nAvailable Events:\n");
 
+    FILE *eventPtr = fopen("events.txt", "r");
+    if(eventPtr == NULL){
+        printf("No events available currently.\n");
+        return;
+    }
+    char line[256];
+    int eventCount = 0;
+    char eventTitles[100][100];
+    while(fgets(line, sizeof(line), eventPtr)){
+        if(strncmp(line, "Title: ", 7) == 0){
+            strcpy(eventTitles[eventCount], line + 7);
+            eventTitles[eventCount][strcspn(eventTitles[eventCount], "\n")] = '\0';
+            printf("%d. %s\n", eventCount + 1, eventTitles[eventCount]);
+            eventCount++;
+        }
+    }
+    fclose(eventPtr);
+
+    if(eventCount == 0){
+        printf("No events found for registration.\n");
+        return;
+    }
+
+    int eventChoice;
+    printf("Select event by number: ");
+    scanf("%d", &eventChoice);
     getchar();
-    printf("Event title: ");
-    fgets(p.eventTitle, sizeof(p.eventTitle), stdin);
+    if(eventChoice < 1 || eventChoice > eventCount){
+        printf("Invalid event selection.\n");
+        return;
+    }
+    char selectedEvent[100];
+    strcpy(selectedEvent, eventTitles[eventChoice - 1]);
+
+    eventPtr = fopen("events.txt", "r");
+    if(eventPtr == NULL){
+        printf("Error reading events file.\n");
+        return;
+    }
+
+    char title[100], promoCode[50];
+    float ticketPrice = 0.0;
+    int found = 0;
+    while(fgets(line, sizeof(line), eventPtr)){
+        if(strncmp(line, "Title: ", 7) == 0){
+            strcpy(title, line + 7);
+            title[strcspn(title, "\n")] = '\0';
+        }
+        else if(strncmp(line, "Ticket Price: ", 14) == 0){
+            ticketPrice = atof(line + 14);
+        }
+        else if(strncmp(line, "Promo Code: ", 12) == 0){
+            strcpy(promoCode, line + 12);
+            promoCode[strcspn(promoCode, "\n")] = '\0';
+        }
+        else if(strncmp(line, "-------------------------", 25) == 0){
+            if(strcmp(title, selectedEvent) == 0){
+                found = 1;
+                break;
+            }
+        }
+    }
+    fclose(eventPtr);
+
+    if(!found){
+        printf("Selected event not found in file.\n");
+        return;
+    }
+
+    struct Registration p;
+    FILE *participantPtr = fopen("participant.txt", "a");
+    if(participantPtr == NULL){
+        printf("Error opening participant file.\n");
+        return;
+    }
+    strcpy(p.eventTitle, selectedEvent);
+
     printf("Participant name: ");
     fgets(p.participantName, sizeof(p.participantName), stdin);
+    p.participantName[strcspn(p.participantName, "\n")] = '\0';
+
     printf("Student ID: ");
     fgets(p.id, sizeof(p.id), stdin);
+    p.id[strcspn(p.id, "\n")] = '\0';
+
     printf("Email: ");
     fgets(p.email, sizeof(p.email), stdin);
+    p.email[strcspn(p.email, "\n")] = '\0';
+
+    float finalPrice = ticketPrice;
+    if(ticketPrice > 0){
+        printf("Ticket price for this event is: %.2f\n", ticketPrice);
+        printf("Enter promo code (or press Enter to skip): ");
+        char enteredCode[50];
+        fgets(enteredCode, sizeof(enteredCode), stdin);
+        enteredCode[strcspn(enteredCode, "\n")] = '\0';
+
+        if(strlen(enteredCode) > 0 && strcmp(enteredCode, promoCode) == 0){
+            finalPrice = ticketPrice * 0.85;
+            printf("Promo code applied! Discounted price: %.2f\n", finalPrice);
+        } else if(strlen(enteredCode) > 0){
+            printf("Invalid promo code. No discount applied.\n");
+        }
+
+        printf("\nSelect Payment Method:\n1. Bkash\n2. Nagad\n3. Rocket\n4. Others\nChoice: ");
+        int payChoice;
+        scanf("%d", &payChoice);
+        getchar();
+
+        char *paymentMethod;
+        switch(payChoice){
+            case 1: paymentMethod = "Bkash"; break;
+            case 2: paymentMethod = "Nagad"; break;
+            case 3: paymentMethod = "Rocket"; break;
+            case 4: paymentMethod = "Others"; break;
+            default: paymentMethod = "Others"; break;
+        }
+        printf("Payment successful, tk %.2f paid from %s\n", finalPrice, paymentMethod);
+    }
+
+    fprintf(participantPtr, "Event Title: %s\n", p.eventTitle);
+    fprintf(participantPtr, "Participant Name: %s\n", p.participantName);
+    fprintf(participantPtr, "Student ID: %s\n", p.id);
+    fprintf(participantPtr, "Email: %s\n", p.email);
 
     char cleanID[20];
     strcpy(cleanID, p.id);
     cleanID[strcspn(cleanID, "\n")] = '\0';
 
-    fprintf(participantPtr, "Event Title: %s", p.eventTitle);
-    fprintf(participantPtr, "Participant Name: %s", p.participantName);
-    fprintf(participantPtr, "Student ID: %s", p.id);
-    fprintf(participantPtr, "Email: %s", p.email);
     fprintf(participantPtr, "Seat Token: S-%s\n", cleanID);
     fprintf(participantPtr, "Food Token: F-%s\n", cleanID);
     fprintf(participantPtr, "---------------------------\n\n");
-    
+
+    fclose(participantPtr);
+
     printf("\n---Congratulations !! Registration completed successfully---\n");
     printf("Your Seat Token: S-%s\n", cleanID);
     printf("Your Food Token: F-%s\n", cleanID);
-    fclose(participantPtr);
 }
+
 void submitFeedback(){
     printf("---Submit Your Feedback.---\n"); 
     struct Feedback f;
