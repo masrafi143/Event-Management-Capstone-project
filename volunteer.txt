@@ -1,18 +1,6 @@
-Event Title: Programming contest
-Volunteer Name: Mohammad Masrafi
-Phone: 0123456789
-Task: stage management
------------------------------
-
-Event Title: Programming contest
-Volunteer Name: demo
-Phone: 0123
-Task: eat
------------------------------
-
-Event Title: demo event 1
-Volunteer Name: demo vol 1
-Phone: 01234
-Task: food
+Event Title: title 2
+Volunteer Name: volunteer
+Phone: v123
+Task: stage
 -----------------------------
 

@@ -332,7 +332,12 @@ while(fgets(line, sizeof(line), attendanceFile)){
 void createEvent(){
     struct Event e;
     FILE *eventPtr;
-    eventPtr = fopen("events.txt", "a");
+    eventPtr = fopen("events.txt", "a+");
+    if(eventPtr==NULL){
+        printf("Unable to open events.txt\n");
+        return;
+    }
+
     printf("Enter how many events you want to create: ");
     int n;
     scanf("%d", &n);
@@ -371,8 +376,42 @@ void createEvent(){
         fgets(e.date, sizeof(e.date), stdin);
         printf("Time: ");
         fgets(e.time, sizeof(e.time), stdin);
-        printf("Venue: ");
-        fgets(e.venue, sizeof(e.venue), stdin);
+
+        char existingVenues[100][50];
+        int venueCount = 0;
+
+        FILE *readPtr = fopen("events.txt", "r");
+        if (readPtr) {
+            char line[300];
+            while (fgets(line, sizeof(line), readPtr)) {
+                if (strncmp(line, "Venue: ", 7) == 0) {
+                    strcpy(existingVenues[venueCount], line + 7);
+                    existingVenues[venueCount][strcspn(existingVenues[venueCount], "\n")] = '\0';
+                    venueCount++;
+                }
+            }
+            fclose(readPtr);
+        }
+
+        while (1) {
+            printf("Venue: ");
+            fgets(e.venue, sizeof(e.venue), stdin);
+            e.venue[strcspn(e.venue, "\n")] = '\0';
+
+            int conflict = 0;
+            for (int j = 0; j < venueCount; j++) {
+                if (strcmp(existingVenues[j], e.venue) == 0) {
+                    conflict = 1;
+                    break;
+                }
+            }
+
+            if (conflict) {
+                printf("Error: An event already exists at this venue. Please enter a different venue.\n");
+            } else {
+                break;
+            }
+        }
 
         int hasTicket;
         printf("Do you want tickets for this event? (1 = Yes, 0 = No): ");
@@ -828,7 +867,6 @@ void submitFeedback(){
 }
 void markAttendance() {
     struct Registration p;
-    int totalParticipant=0;
     FILE *participantPtr = fopen("participant.txt", "r");
     FILE *attendancePtr = fopen("attendance.txt", "a");
 
@@ -858,7 +896,6 @@ void markAttendance() {
             fprintf(attendancePtr, "Participant Name: %s\n", p.participantName);
             fprintf(attendancePtr, "Student ID: %s\n", p.id);
             if(status==1){
-                totalParticipant++;
                 fprintf(attendancePtr, "Attendance: Present\n");
             } else{
                 fprintf(attendancePtr, "Attendance: Absent\n");
@@ -866,11 +903,9 @@ void markAttendance() {
             fprintf(attendancePtr, "-----------------------------\n\n");
         }
     }
-    
     fclose(participantPtr);
     fclose(attendancePtr);
     printf("\n---Attendance marking completed successfully---\n");
-    printf("total: %d", totalParticipant);
 }
 
 void viewAttendance(){
@@ -958,6 +993,7 @@ void generateReport(){
 
     printf("\nReport generated successfully.\n");
 }
+
 void faq(){
     FILE *faqFile = fopen("faq.txt", "r");
     char line[256];
@@ -971,6 +1007,7 @@ void faq(){
     }
     fclose(faqFile);
 }
+
 void organizer(){
     int option;
     while(1){

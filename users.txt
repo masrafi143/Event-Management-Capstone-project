@@ -1,25 +1,10 @@
-Name: masrafi
-Role: Participant
-Email: p
-Password: p
-Phone: 012345678
-Name: organizer
+Name: Organizer
 Role: Organizer
-Email: o
-Password: o
-Phone: 012345
-Name: Mohammad Masrafi
-Role: Organizer
-Email: masrafi@gmail.com
-Password: masrafi123
-Phone: 01234567890
-Name: Mohammad Masrafi
+Email: organizer@gmail.com
+Password: organizer
+Phone: 1111
+Name: Participant
 Role: Participant
-Email: masrafi123@gmail.com
-Password: masrafi123
-Phone: 0112233445566
-Name: cd "c:\Users\user\Downloads\Event Management Caps
-Role: …Óvu
-Email: one project\" && gcc eventManagement.c -o eventMa
-Password: nagement && "c:\Users\user\Do
-Phone: wnloads\Event Manag
+Email: participant@gmail.com
+Password: participant
+Phone: 2222

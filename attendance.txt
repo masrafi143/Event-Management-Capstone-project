@@ -1,7 +1,6 @@
-Event Title: Data science seminer
-Participant Name: Mohammad Masrafi
-Email: masrafi123@gmail.com
-Student ID: 369
+Event Title: title 2
+Participant Name: Participant
+Student ID: 123
 Attendance: Present
 -----------------------------
 
