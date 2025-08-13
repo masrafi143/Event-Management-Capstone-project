@@ -1,93 +1,25 @@
-Title: Programming contest
-Description: A university-level competition to solve challenging programming problems, test coding skills, and foster teamwork.
-Date: 11/09/2025
-Time: 9:00 am
-Venue: Daffodil International University
 
--------------------------
 
-Title: demo event 1
-Description: demo desc 1
-Date: date 1
-Time: time 1
-Venue: denue 1
-
--------------------------
-
+Title: 1
 Category: Tech & Innovation
-Title: workshop
-Description: ai sminer
-Date: 20
-Time: 2pm
-Venue: daffodil
+Description: 1
+Date: 1
+Time: 1
+Venue: 1
 
--------------------------
-
-Category: Cultural & Music
-Title: demo title 2
-Description: demo title 2
-Date: 6 aug
-Time: 8 pm
-Venue: daff
-
-Ticket System: Yes
-Ticket Price: 500.00
-Promo Code: early50
--------------------------
-
-Category: Workshop & Training
-Category: Food & Lifestyle
-Title: updated demo
-Description: updated
-Date: updated
-Time: up
-Venue: up
-Ticket Price: 0.00
-Promo Code: N/A
+Ticket Price: 1.00
+Promo Code: 1
 -------------------------
 
 
-Category: Others
-Title: demo 4
-Description: demo 4
-Date: demo4
-Time: demo 4
-Venue: demo 4
+Title: 3
+Category: Sports & Games
+Description: 3
+Date: 3
+Time: 3
+Venue: 3
 
 Ticket Price: 0.00
 Promo Code: N/A
--------------------------
-
-Category: Others
-Title: demo 5
-Description: demo 5
-Date: demo 5
-Time: demo 5
-Venue: demo 5
-
-Ticket Price: 111.00
-Promo Code: 
--------------------------
-
-Category: Others
-Title: demo 6
-Description: demo 6
-Date: demo 6
-Time: dem o6
-Venue: demo 6
-
-Ticket Price: 0.00
-Promo Code: N/A
--------------------------
-
-Category: Tech & Innovation
-Category: Workshop & Training
-Title: up dem 7
-Description: up dem 7
-Date: he
-Time: heheh
-Venue: daffo
-Ticket Price: 100.00
-Promo Code: 
 -------------------------
 

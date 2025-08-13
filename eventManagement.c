@@ -391,8 +391,8 @@ void createEvent(){
             strcpy(e.promoCode, "N/A");
         }
 
-        fprintf(eventPtr, "Category: %s\n", e.category);
         fprintf(eventPtr, "Title: %s", e.title);
+        fprintf(eventPtr, "Category: %s\n", e.category);
         fprintf(eventPtr, "Description: %s", e.description);
         fprintf(eventPtr, "Date: %s", e.date);
         fprintf(eventPtr, "Time: %s", e.time);
@@ -568,57 +568,100 @@ void updateEvent() {
     printf("\n--- Event updated successfully ---\n");
 }
 
-void deleteEvent(){
+void deleteEvent() {
     printf("\n--- Delete Event Section ---\n");
     FILE *eventPtr = fopen("events.txt", "r");
     FILE *tempPtr = fopen("temp.txt", "w");
-    if(eventPtr == NULL){
+    if (eventPtr == NULL) {
         printf("No events found.\n");
         return;
     }
 
-    char searchTitle[100], line[300];
-    int found = 0;
-    getchar();
-    printf("Enter event title to delete: ");
-    fgets(searchTitle, sizeof(searchTitle), stdin);
+    char titles[100][100];
+    char line[300];
+    int count = 0;
 
-    int len = strlen(searchTitle);
-    if(len > 0 && searchTitle[len-1] == '\n'){
-        searchTitle[len-1] = '\0';
+    while (fgets(line, sizeof(line), eventPtr)) {
+        if (strncmp(line, "Title: ", 7) == 0) {
+            strcpy(titles[count], line + 7);
+            int len = strlen(titles[count]);
+            if (len > 0 && titles[count][len - 1] == '\n') {
+                titles[count][len - 1] = '\0';
+            }
+            count++;
+        }
     }
 
-    while(fgets(line, sizeof(line), eventPtr)){
-        if(strncmp(line, "Title: ", 7) == 0){
+    if (count == 0) {
+        printf("No events to delete.\n");
+        fclose(eventPtr);
+        fclose(tempPtr);
+        remove("temp.txt");
+        return;
+    }
+
+    printf("\nAvailable Events:\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d. %s\n", i + 1, titles[i]);
+    }
+
+    int choice;
+    printf("\nEnter event number to delete: ");
+    scanf("%d", &choice);
+    getchar();
+
+    if (choice < 1 || choice > count) {
+        printf("Invalid choice.\n");
+        fclose(eventPtr);
+        fclose(tempPtr);
+        remove("temp.txt");
+        return;
+    }
+
+    char searchTitle[100];
+    strcpy(searchTitle, titles[choice - 1]);
+
+    fclose(eventPtr);
+    eventPtr = fopen("events.txt", "r");
+
+    int found = 0;
+
+    while (fgets(line, sizeof(line), eventPtr)) {
+        if (strncmp(line, "Title: ", 7) == 0) {
             char tempTitle[100];
             strcpy(tempTitle, line + 7);
-            len = strlen(tempTitle);
-            if(len > 0 && tempTitle[len-1] == '\n'){
-                tempTitle[len-1] = '\0';
+            int len = strlen(tempTitle);
+            if (len > 0 && tempTitle[len - 1] == '\n') {
+                tempTitle[len - 1] = '\0';
             }
 
-            if(strcmp(tempTitle, searchTitle) == 0){
+            if (strcmp(tempTitle, searchTitle) == 0) {
                 found = 1;
-                for(int i=0; i<7; i++){
-                    fgets(line, sizeof(line), eventPtr);
+                while (fgets(line, sizeof(line), eventPtr)) {
+                    if (strncmp(line, "-------------------------", 25) == 0) {
+                        break;
+                    }
                 }
                 continue;
             }
         }
         fputs(line, tempPtr);
     }
+
     fclose(eventPtr);
     fclose(tempPtr);
+
     remove("events.txt");
     rename("temp.txt", "events.txt");
 
-    if(found){
+    if (found) {
         printf("--- Event '%s' deleted successfully ---\n", searchTitle);
-    } else{
+    } else {
         printf("--- Event '%s' not found ---\n", searchTitle);
         remove("temp.txt");
     }
 }
+
 void registerParticipant(){  
     printf("\n---Register Participant section.---\nAvailable Events:\n");
 
@@ -929,55 +972,69 @@ void faq(){
     fclose(faqFile);
 }
 void organizer(){
-    printf("welcome as organizer\n");
-    printf("Event Management System -(Organizer menu)\n");
-    printf("1. Create Events\n");
-    printf("2. View Events\n");
-    printf("3. Update Events\n");
-    printf("4. Delete Events\n");
-    printf("5. Register Volunteer\n");
-    printf("6. Mark Attendance\n");
-    printf("7. View Attendance\n");
-    printf("8. Generate Report\n");
-    printf("9. Exit\n");
-    printf("Choose an option: ");
     int option;
-    scanf("%d", &option);
-    switch(option){
-        case 1: createEvent(); break;
-        case 2: viewEvent(); break;
-        case 3: updateEvent(); break;
-        case 4: deleteEvent(); break;
-        case 5: registerVolunteer(); break;
-        case 6: markAttendance(); break;
-        case 7: viewAttendance(); break;
-        case 8: generateReport(); break;
-        case 9: exit(0); break;
-        default: printf("Invalid Option\n");
+    while(1){
+        printf("\nWelcome as Organizer\n");
+        printf("Event Management System -(Organizer menu)\n");
+        printf("1. Create Events\n");
+        printf("2. View Events\n");
+        printf("3. Update Events\n");
+        printf("4. Delete Events\n");
+        printf("5. Register Volunteer\n");
+        printf("6. Mark Attendance\n");
+        printf("7. View Attendance\n");
+        printf("8. Generate Report\n");
+        printf("9. Exit\n");
+        printf("Choose an option: ");
+        scanf("%d", &option);
+
+        switch(option){
+            case 1: createEvent(); break;
+            case 2: viewEvent(); break;
+            case 3: updateEvent(); break;
+            case 4: deleteEvent(); break;
+            case 5: registerVolunteer(); break;
+            case 6: markAttendance(); break;
+            case 7: viewAttendance(); break;
+            case 8: generateReport(); break;
+            case 9: 
+                printf("Exiting Organizer menu...\n");
+                return;
+            default: 
+                printf("Invalid Option\n");
+        }
     }
 }
+
 void participant(){
-    printf("welcome as participant\n");
-    printf("Event Management System -(Participant menu)\n");
-    printf("1. View Events\n");
-    printf("2. Register for Event\n");
-    printf("3. Submit Feedback\n");
-    printf("4. Dashboard\n");
-    printf("5. Help & FAQ\n");
-    printf("6. Exit\n");
-    printf("Choose an option: ");
     int option;
-    scanf("%d", &option);
-    switch(option){
-        case 1: viewEvent(); break;
-        case 2: registerParticipant(); break;
-        case 3: submitFeedback(); break;
-        case 4: dashboard(); break;
-        case 5: faq(); break;
-        case 6: exit(0); break;
-        default: printf("Invalid Option\n");
+    while(1){
+        printf("\nWelcome as Participant\n");
+        printf("Event Management System -(Participant menu)\n");
+        printf("1. View Events\n");
+        printf("2. Register for Event\n");
+        printf("3. Submit Feedback\n");
+        printf("4. Dashboard\n");
+        printf("5. Help & FAQ\n");
+        printf("6. Exit\n");
+        printf("Choose an option: ");
+        scanf("%d", &option);
+
+        switch(option){
+            case 1: viewEvent(); break;
+            case 2: registerParticipant(); break;
+            case 3: submitFeedback(); break;
+            case 4: dashboard(); break;
+            case 5: faq(); break;
+            case 6: 
+                printf("Exiting Participant menu...\n");
+                return;
+            default: 
+                printf("Invalid Option\n");
+        }
     }
 }
+
 int main(){
     printf("Welcome to Event Management System (Ez_VENT)\n1. Registration\n2. Login\nEnter choice: ");
     int choice;

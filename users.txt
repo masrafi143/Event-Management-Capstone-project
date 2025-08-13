@@ -18,3 +18,8 @@ Role: Participant
 Email: masrafi123@gmail.com
 Password: masrafi123
 Phone: 0112233445566
+Name: cd "c:\Users\user\Downloads\Event Management Caps
+Role: …Óvu
+Email: one project\" && gcc eventManagement.c -o eventMa
+Password: nagement && "c:\Users\user\Do
+Phone: wnloads\Event Manag
