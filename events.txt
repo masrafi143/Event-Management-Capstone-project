@@ -36,15 +36,16 @@ Promo Code: early50
 -------------------------
 
 Category: Workshop & Training
-Title: demo 3
-Description: demo 3
-Date: date 3
-Time: time 3
-Venue: venue 3
-
-Ticket Price: 1000.00
-Promo Code: 
+Category: Food & Lifestyle
+Title: updated demo
+Description: updated
+Date: updated
+Time: up
+Venue: up
+Ticket Price: 0.00
+Promo Code: N/A
 -------------------------
+
 
 Category: Others
 Title: demo 4
@@ -80,12 +81,13 @@ Promo Code: N/A
 -------------------------
 
 Category: Tech & Innovation
-Title: demo 7
-Description: demo 7
-Date: demo 7
-Time: demo 7
-Venue: demo 7
-
-Ticket Price: 0.00
-Promo Code: N/A
+Category: Workshop & Training
+Title: up dem 7
+Description: up dem 7
+Date: he
+Time: heheh
+Venue: daffo
+Ticket Price: 100.00
+Promo Code: 
+-------------------------
 

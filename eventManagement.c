@@ -424,9 +424,150 @@ void viewEvent(){
 
     fclose(eventPtr);
 }
-void updateEvent(){   
-    printf("update event section\n");
+void updateEvent() {
+    printf("\n--- Update Event Section ---\n");
+
+    FILE *eventPtr = fopen("events.txt", "r");
+    if (eventPtr == NULL){
+        printf("No events found.\n");
+        return;
+    }
+
+    char line[300], eventTitles[100][100];
+    int eventCount = 0;
+
+    while (fgets(line, sizeof(line), eventPtr)) {
+        if (strncmp(line, "Title: ", 7) == 0) {
+            strcpy(eventTitles[eventCount], line + 7);
+            eventTitles[eventCount][strcspn(eventTitles[eventCount], "\n")] = '\0';
+            eventCount++;
+        }
+    }
+    fclose(eventPtr);
+
+    if (eventCount == 0) {
+        printf("No events available to update.\n");
+        return;
+    }
+
+    printf("\nAvailable Events:\n");
+    for (int i = 0; i < eventCount; i++) {
+        printf("%d. %s\n", i + 1, eventTitles[i]);
+    }
+
+    int choice;
+    printf("Select event number to update: ");
+    scanf("%d", &choice);
+    getchar();
+    if (choice < 1 || choice > eventCount) {
+        printf("Invalid choice.\n");
+        return;
+    }
+    char selectedEvent[100];
+    strcpy(selectedEvent, eventTitles[choice - 1]);
+
+    struct Event e;
+    int catChoice;
+    printf("Select Event Category:\n");
+    printf("1. Tech & Innovation\n2. Workshop & Training\n3. Sports & Games\n");
+    printf("4. Cultural & Music\n5. Food & Lifestyle\n6. Others\n");
+    printf("Enter choice (1-6): ");
+    scanf("%d", &catChoice);
+    getchar();
+
+    switch (catChoice) {
+        case 1: strcpy(e.category, "Tech & Innovation"); break;
+        case 2: strcpy(e.category, "Workshop & Training"); break;
+        case 3: strcpy(e.category, "Sports & Games"); break;
+        case 4: strcpy(e.category, "Cultural & Music"); break;
+        case 5: strcpy(e.category, "Food & Lifestyle"); break;
+        case 6: strcpy(e.category, "Others"); break;
+        default: strcpy(e.category, "Others"); break;
+    }
+
+    printf("Event title: ");
+    fgets(e.title, sizeof(e.title), stdin);
+    e.title[strcspn(e.title, "\n")] = '\0';
+
+    printf("Description: ");
+    fgets(e.description, sizeof(e.description), stdin);
+    e.description[strcspn(e.description, "\n")] = '\0';
+
+    printf("Date: ");
+    fgets(e.date, sizeof(e.date), stdin);
+    e.date[strcspn(e.date, "\n")] = '\0';
+
+    printf("Time: ");
+    fgets(e.time, sizeof(e.time), stdin);
+    e.time[strcspn(e.time, "\n")] = '\0';
+
+    printf("Venue: ");
+    fgets(e.venue, sizeof(e.venue), stdin);
+    e.venue[strcspn(e.venue, "\n")] = '\0';
+
+    int hasTicket;
+    printf("Do you want tickets for this event? (1 = Yes, 0 = No): ");
+    scanf("%d", &hasTicket);
+    getchar();
+
+    if (hasTicket == 1) {
+        printf("Enter ticket price: ");
+        scanf("%f", &e.ticketPrice);
+        getchar();
+        printf("Enter promo code (or leave blank): ");
+        fgets(e.promoCode, sizeof(e.promoCode), stdin);
+        e.promoCode[strcspn(e.promoCode, "\n")] = '\0';
+    } else {
+        e.ticketPrice = 0.0;
+        strcpy(e.promoCode, "N/A");
+    }
+
+    eventPtr = fopen("events.txt", "r");
+    FILE *tempPtr = fopen("temp.txt", "w");
+    if (eventPtr == NULL || tempPtr == NULL) {
+        printf("Error opening files.\n");
+        return;
+    }
+
+    int skipLines = 0;
+    while (fgets(line, sizeof(line), eventPtr)) {
+        if (strncmp(line, "Title: ", 7) == 0) {
+            char currentTitle[100];
+            strcpy(currentTitle, line + 7);
+            currentTitle[strcspn(currentTitle, "\n")] = '\0';
+
+            if (strcmp(currentTitle, selectedEvent) == 0) {
+                fprintf(tempPtr, "Category: %s\n", e.category);
+                fprintf(tempPtr, "Title: %s\n", e.title);
+                fprintf(tempPtr, "Description: %s\n", e.description);
+                fprintf(tempPtr, "Date: %s\n", e.date);
+                fprintf(tempPtr, "Time: %s\n", e.time);
+                fprintf(tempPtr, "Venue: %s\n", e.venue);
+                if (hasTicket) {
+                    fprintf(tempPtr, "Ticket Price: %.2f\n", e.ticketPrice);
+                    fprintf(tempPtr, "Promo Code: %s\n", e.promoCode);
+                }
+                fprintf(tempPtr, "-------------------------\n\n");
+
+                while (fgets(line, sizeof(line), eventPtr)) {
+                    if (strncmp(line, "-------------------------", 25) == 0) {
+                        break;
+                    }
+                }
+                continue;
+            }
+        }
+        fputs(line, tempPtr);
+    }
+
+    fclose(eventPtr);
+    fclose(tempPtr);
+    remove("events.txt");
+    rename("temp.txt", "events.txt");
+
+    printf("\n--- Event updated successfully ---\n");
 }
+
 void deleteEvent(){
     printf("\n--- Delete Event Section ---\n");
     FILE *eventPtr = fopen("events.txt", "r");
