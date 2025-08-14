@@ -1,8 +1,0 @@
-Event Title: title 2
-Participant Name: Participant
-Student ID: 123
-Email: participant@gmail.com
-Seat Token: S-123
-Food Token: F-123
----------------------------
-

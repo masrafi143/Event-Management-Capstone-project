@@ -1,6 +1,0 @@
-Event Title: title 2
-Participant Name: Participant
-Student ID: 123
-Attendance: Present
------------------------------
-

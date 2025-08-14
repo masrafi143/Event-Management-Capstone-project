@@ -1,6 +1,0 @@
-Event Title: title 2
-Volunteer Name: volunteer
-Phone: v123
-Task: stage
------------------------------
-
